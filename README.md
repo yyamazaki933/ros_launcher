@@ -1,6 +1,8 @@
 # ROS Launcher
 
-<!-- <img src="img/demo.png"> -->
+GUI launcher for ROS2.
+
+<img src="img/demo.png">
 
 ## Install and Setup
 
