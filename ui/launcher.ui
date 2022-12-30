@@ -43,7 +43,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="le_bag">
+       <widget class="QLineEdit" name="le_xml">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -81,7 +81,7 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QPushButton" name="pb_bash">
+       <widget class="QPushButton" name="pb_src">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -106,7 +106,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLineEdit" name="le_src"/>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label">
@@ -170,7 +170,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QScrollArea" name="scl_args">
+       <widget class="QScrollArea" name="scrollArea">
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
@@ -183,6 +183,11 @@
            <height>505</height>
           </rect>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <layout class="QVBoxLayout" name="arglist"/>
+          </item>
+         </layout>
         </widget>
        </widget>
       </item>
