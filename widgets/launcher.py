@@ -17,25 +17,53 @@ class LauncherWindow(QtWidgets.QWidget):
 
         self.home_dir = os.getenv('HOME')
         self.ui_file = ui_file
+        self.log_file = ui_file.replace('/ui/launcher.ui', '/launcher.log')
         self.arg_items = []
         self.conf_file = ''
         self.conf = {}
         self.conf['launch_file'] = ''
         self.conf['source_file'] = ''
 
+        self.loadLog()
+
         self.pb_xml.clicked.connect(self.pb_xml_cb)
         self.pb_src.clicked.connect(self.pb_src_cb)
         self.pb_launch.clicked.connect(self.pb_launch_cb)
 
+    def saveLog(self):
+        last_open = self.le_xml.text()
+
+        log = {'last_open': last_open}
+
+        with open(self.log_file, 'w') as file:
+            yaml.dump(log, file)
+
+        print('[INFO] saveLog().last_open:', last_open)
+
+    def loadLog(self):
+        try:
+            with open(self.log_file, 'r') as file:
+                log = yaml.safe_load(file)
+                last_open = log['last_open']
+
+            print('[INFO] loadLog().last_open:', last_open)
+            self.set_launch_file(last_open)
+
+        except FileNotFoundError:
+            self.saveLog()
+
     def saveConf(self, conf_file, conf):
+        print('[INFO] saveConf():', conf_file)
         with open(conf_file, 'w') as file:
             yaml.safe_dump(conf, file, sort_keys=False)
 
     def loadConf(self, conf_file, default_conf):
+        print('[INFO] loadConf():', conf_file)
         try:
             with open(conf_file, 'r') as file:
                 return yaml.safe_load(file)
         except FileNotFoundError:
+            print('[INFO] loadConf(): file not found. create file.')
             self.saveConf(conf_file, default_conf)
             return default_conf
 
@@ -53,6 +81,8 @@ class LauncherWindow(QtWidgets.QWidget):
         if file == '':
             return
 
+        print('[INFO] set_launch_file():', file)
+
         self.le_xml.setText(file)
         self.conf['launch_file'] = file
         self.parseFile(file)
@@ -66,6 +96,8 @@ class LauncherWindow(QtWidgets.QWidget):
     def set_src_file(self, file):
         if file == '':
             return
+
+        print('[INFO] set_src_file():', file)
 
         self.le_src.setText(file)
         self.conf['source_file'] = file
@@ -93,6 +125,7 @@ class LauncherWindow(QtWidgets.QWidget):
 
         print('[INFO] execCmdAsync():', cmd)
         self.saveConf(self.conf_file, self.conf)
+        self.saveLog()
         subprocess.Popen(cmd, shell=True, executable='/bin/bash', text=True)
 
     def parseFile(self, file):
@@ -106,6 +139,10 @@ class LauncherWindow(QtWidgets.QWidget):
                 i += 1
 
     def createParamList(self):
+        for item in self.arg_items:
+            item.deleteLater()
+        self.arg_items.clear()
+
         for key, val in self.conf.items():
             if key == 'launch_file' or key == 'source_file':
                 continue
