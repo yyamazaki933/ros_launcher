@@ -80,7 +80,7 @@ class LauncherWindow(QtWidgets.QWidget):
                 self.conf = yaml.safe_load(file)
         except FileNotFoundError:
             print('[INFO] loadConf(): file not found. create file.')
-            self.conf = {"launch_file": self.launch_file, "path": self.path}
+            self.conf = {"launch_file": self.launch_file, "path": self.path, "args": {}}
             self.saveConf()
 
     def loadLaunch(self, file):
@@ -103,8 +103,8 @@ class LauncherWindow(QtWidgets.QWidget):
         for child in root:
             if child.tag == 'arg':
                 arg_name = child.attrib['name']
-                if self.conf.get(arg_name) == None:
-                    self.conf[arg_name] = child.attrib
+                if self.conf['args'].get(arg_name) == None:
+                    self.conf['args'][arg_name] = child.attrib
                 i += 1
 
     def createParamList(self):
@@ -112,10 +112,7 @@ class LauncherWindow(QtWidgets.QWidget):
             item.deleteLater()
         self.arg_items.clear()
 
-        for key, val in self.conf.items():
-            if key == 'launch_file':
-                continue
-
+        for key, val in self.conf['args'].items():
             arg_item = ArgItem(val)
             self.arg_items.append(arg_item)
             self.arglist.addWidget(arg_item)
