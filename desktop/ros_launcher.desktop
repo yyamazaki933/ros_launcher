@@ -3,7 +3,7 @@
 Type=Application
 Version=1.0
 Name=RosLauncher
-Exec=/usr/bin/python3 PATH/RosLauncher %f
+Exec=/usr/bin/python3 PATH/launcher.py %f
 Icon=ros_launcher
 MimeType=application/xml;
 Terminal=true
