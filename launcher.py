@@ -27,21 +27,32 @@ class LauncherWindow(QtWidgets.QWidget):
         self.conf_file = None
         self.launch_file = None
 
-        self.pb_file.clicked.connect(self.__pb_file_call)
+        self.pb_xml.clicked.connect(self.__pb_xml_call)
+        self.pb_path.clicked.connect(self.__pb_path_call)
         self.pb_launch.clicked.connect(self.__pb_launch_call)
 
+        self.le_xml.setStyleSheet("QLineEdit { color: gray; }")
+        self.le_path.setStyleSheet("QLineEdit { color: gray; }")
         self.pb_launch.setText("Start")
-        self.le_file.setStyleSheet("QLineEdit { color: gray; }")
 
         if launch_file != None:
             self.loadLaunch(launch_file)        
             
-    def __pb_file_call(self):
+    def __pb_xml_call(self):
         file = QFileDialog.getOpenFileName(
-            self, 'Choose Launch File', self.home_dir, 'Launch XML (*.launch.xml)')[0]
+            self, 'Choose ros launch file', self.home_dir, 'Launch XML (*.launch.xml)')[0]
         if file == None:
             return
         self.loadLaunch(file)
+
+    def __pb_path_call(self):
+        file = QFileDialog.getOpenFileName(
+            self, 'Choose path setup file', self.home_dir, 'Bash File (setup.bash)')[0]
+        if file == None:
+            return
+        self.conf["path"] = file
+        self.le_path.setText(file)
+        self.le_path.setStyleSheet("QLineEdit { color: white; }")
 
     def __pb_launch_call(self):
         if self.launch_file == None:
@@ -54,11 +65,13 @@ class LauncherWindow(QtWidgets.QWidget):
             self.pb_launch.setText("Start")
 
         else:
-            cmd = 'source ' + self.path
+            self.conf['launch_file'] = self.le_xml.text()
+            self.conf['path'] = self.le_path.text()
+
+            cmd = 'source ' + self.conf['path']
             cmd += ' && '
             cmd += 'exec ros2 launch ' + self.launch_file
 
-            self.conf['path'] = self.path
             for arg_item in self.arg_items:
                 if arg_item.default != arg_item.currentVal():
                     self.conf["args"][arg_item.arg_name]['override'] = arg_item.currentVal()
@@ -66,15 +79,14 @@ class LauncherWindow(QtWidgets.QWidget):
                 elif self.conf["args"][arg_item.arg_name].get('override'):
                     self.conf["args"][arg_item.arg_name].pop('override')
 
-            print('[INFO] startProc():', cmd)
             self.saveConf()
             self.proc = subprocess.Popen(cmd, shell=True, executable='/bin/bash', text=True, preexec_fn=os.setsid)
             self.pb_launch.setText("Stop")
 
     def saveConf(self):
-        print('[INFO] saveConf():', self.conf_file)
         with open(self.conf_file, 'w') as file:
             yaml.safe_dump(self.conf, file, sort_keys=False)
+        print('[INFO] saveConf():', self.conf_file)
 
     def loadConf(self):
         try:
@@ -94,8 +106,11 @@ class LauncherWindow(QtWidgets.QWidget):
         
         self.loadConf()
 
-        self.le_file.setText(os.path.basename(file))
-        self.le_file.setStyleSheet("QLineEdit { color: white; }")
+        self.le_xml.setText(file)
+        self.le_xml.setStyleSheet("QLineEdit { color: white; }")
+        self.le_path.setText(self.conf["path"])
+        self.le_path.setStyleSheet("QLineEdit { color: white; }")
+
         self.parseFile(file)
         self.createParamList()
 
