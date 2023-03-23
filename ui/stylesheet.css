@@ -22,11 +22,25 @@ QFrame[frameShape="5"]
     border: 1px solid rgb(43, 43, 43);
 } */
 
-QScrollArea
+QComboBox, QLineEdit, QPlainTextEdit, QListWidget, QScrollArea
 {
-    border: 2px solid rgb(53, 53, 53);
+    color: white;
+    background-color: transparent;
+    border: 1px solid rgb(53, 53, 53);
     border-radius: 15px;
-    padding: 10px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    selection-background-color: rgb(80, 80, 255);
+}
+
+QComboBox::drop-down
+{
+    border-radius: 5px;
+    width: 10px;
+    height: 10px;
+    margin: 10px;
+    background-color: rgb(80, 80, 255);
 }
 
 QScrollArea::corner
@@ -98,40 +112,6 @@ QPushButton:disabled, QToolButton:disabled
     border-color: gray;
 }
 
-QComboBox, QLineEdit
-{
-    color: white;
-    background-color: transparent;
-    border: 2px solid rgb(53, 53, 53);
-    border-radius: 16px;
-    padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    selection-background-color: rgb(80, 80, 255);
-}
-
-QComboBox::drop-down
-{
-    border-radius: 5px;
-    width: 10px;
-    height: 10px;
-    margin: 10px;
-    background-color: rgb(80, 80, 255);
-}
-
-/* QComboBox::down-arrow
-{
-    background-color: blue;
-} */
-
-QPlainTextEdit, QListWidget
-{
-    /* border-style: solid;
-    background-color: rgb(43, 43, 43);
-    selection-background-color: rgb(53, 53, 255);
-    color: rgb(170, 170, 170); */
-    border-radius: 5px;
-}
 
 QSpinBox, QDoubleSpinBox
 {
@@ -139,7 +119,7 @@ QSpinBox, QDoubleSpinBox
     padding: 3px;
 }
 
-QProgressBar
+/* QProgressBar
 {
     border-style: solid;
     text-align: center;
@@ -149,4 +129,4 @@ QProgressBar::chunk
 {
     background-color: rgb(80, 80, 255);
     margin: 2px;
-}
+} */

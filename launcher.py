@@ -29,7 +29,9 @@ class LauncherWindow(QtWidgets.QWidget):
 
         self.pb_file.clicked.connect(self.__pb_file_call)
         self.pb_launch.clicked.connect(self.__pb_launch_call)
+
         self.pb_launch.setText("Start")
+        self.le_file.setStyleSheet("QLineEdit { color: gray; }")
 
         if launch_file != None:
             self.loadLaunch(launch_file)        
@@ -59,10 +61,10 @@ class LauncherWindow(QtWidgets.QWidget):
             self.conf['path'] = self.path
             for arg_item in self.arg_items:
                 if arg_item.default != arg_item.currentVal():
-                    self.conf[arg_item.arg_name]['override'] = arg_item.currentVal()
+                    self.conf["args"][arg_item.arg_name]['override'] = arg_item.currentVal()
                     cmd += ' ' + arg_item.arg_name + ':=' + arg_item.currentVal()
-                elif self.conf[arg_item.arg_name].get('override'):
-                    self.conf[arg_item.arg_name].pop('override')
+                elif self.conf["args"][arg_item.arg_name].get('override'):
+                    self.conf["args"][arg_item.arg_name].pop('override')
 
             print('[INFO] startProc():', cmd)
             self.saveConf()
@@ -93,6 +95,7 @@ class LauncherWindow(QtWidgets.QWidget):
         self.loadConf()
 
         self.le_file.setText(os.path.basename(file))
+        self.le_file.setStyleSheet("QLineEdit { color: white; }")
         self.parseFile(file)
         self.createParamList()
 
